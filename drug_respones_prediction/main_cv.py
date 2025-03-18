@@ -33,7 +33,8 @@ def main(config_path):
     logger.info(f"使用设备: {device}")
 
     # 数据加载
-    data_loader = DataLoader(config)
+    #data_loader = DataLoader(config)
+    data_loader = DataLoader(config,numworkers=4)
     X, y, identifiers = data_loader.load_data()
 
     # 创建交叉验证器

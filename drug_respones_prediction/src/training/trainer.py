@@ -35,7 +35,7 @@ class Trainer:
 
         # 设置学习率调度器
         self.scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-            self.optimizer, mode='min', factor=0.5, patience=5, verbose=True
+            self.optimizer, mode='min', factor=0.5, patience=5#, verbose=True
         )
 
         # 确保输出目录存在
@@ -81,6 +81,7 @@ class Trainer:
 
                 # 前向传播
                 outputs = self.model(features)
+                outputs = outputs.squeeze()  # 调整维度
                 loss = self.criterion(outputs, targets)
 
                 # 反向传播和优化
@@ -105,6 +106,7 @@ class Trainer:
                 for features, targets in val_loader:
                     features, targets = features.to(self.device), targets.to(self.device)
                     outputs = self.model(features)
+                    outputs = outputs.squeeze()
                     loss = self.criterion(outputs, targets)
                     val_loss += loss.item() * features.size(0)
 

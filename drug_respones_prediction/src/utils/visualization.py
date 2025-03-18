@@ -14,8 +14,8 @@ def plot_training_history(train_losses, val_losses, save_path='training_history.
         title: 图表标题
     """
     plt.figure(figsize=(10, 6))
-    plt.plot(train_losses, label='训练损失')
-    plt.plot(val_losses, label='验证损失')
+    plt.plot(train_losses, label='train_loss')
+    plt.plot(val_losses, label='val_loss')
     plt.xlabel('Epoch')
     plt.ylabel('损失')
     plt.title(title)
@@ -40,16 +40,16 @@ def plot_predictions(predictions, actuals, save_path='prediction_scatter.png'):
     # 添加完美预测线
     min_val = min(min(actuals), min(predictions))
     max_val = max(max(actuals), max(predictions))
-    plt.plot([min_val, max_val], [min_val, max_val], 'r--', label='完美预测')
+    plt.plot([min_val, max_val], [min_val, max_val], 'r--', label='prefect prediction')
 
     # 添加趋势线
     z = np.polyfit(actuals, predictions, 1)
     p = np.poly1d(z)
     plt.plot(sorted(actuals), p(sorted(actuals)), 'b-', label=f'趋势线 (y = {z[0]:.4f}x + {z[1]:.4f})')
 
-    plt.xlabel('真实 IC50 值')
-    plt.ylabel('预测 IC50 值')
-    plt.title('IC50 预测结果')
+    plt.xlabel('true IC50')
+    plt.ylabel('predict IC50')
+    plt.title('IC50 predict result')
     plt.legend()
     plt.grid(True)
     plt.savefig(save_path)
@@ -104,7 +104,7 @@ def plot_fold_metrics(fold_metrics, save_path='fold_metrics.png'):
         plt.bar(fold_numbers, metrics_df[metric], color=colors[i])
         plt.axhline(y=metrics_df[metric].mean(), color='r', linestyle='-',
                     label=f'平均: {metrics_df[metric].mean():.4f}')
-        plt.xlabel('折')
+        plt.xlabel('flod')
         plt.ylabel(metric.upper())
         plt.title(f'{metric.upper()} 各折对比')
         plt.grid(True, axis='y', alpha=0.3)
