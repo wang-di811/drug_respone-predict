@@ -10,7 +10,7 @@ logger = logging.getLogger('DrugResponse.DataLoader')
 class DataLoader:
     """数据加载和预处理类"""
 
-    def __init__(self, config):
+    def __init__(self, config, num_workers=0):
         """
         初始化数据加载器
 
@@ -18,10 +18,19 @@ class DataLoader:
             config: 包含数据路径和预处理参数的配置对象
         """
         self.config = config
+        self.num_workers = num_workers  # 保存参数，虽然现在可能不会使用
         self.scaler = StandardScaler()
         self.X = None
         self.y = None
         self.identifiers = None
+
+    def _create_data_loader(self, dataset, batch_size):
+        return torch.utils.data.DataLoader(
+            dataset,
+            batch_size=batch_size,
+            shuffle=True,
+            num_workers=self.num_workers
+        )
 
     def load_data(self):
         """

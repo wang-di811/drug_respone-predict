@@ -4,8 +4,8 @@
 data:
   # 数据文件路径
   ic50_path: 'src/data/filtered_ic50_data2.csv'
-  drug_encoded_path: 'src/data/one_hot_drugs.csv'  # 添加这一行
-  protein_path: 'src/data/DAE_features_dim100.csv'  # 添加这一行
+  drug_encoded_path: 'src/data/one_hot_drugs.csv'
+  protein_path: 'src/data/DAE_features_dim100.csv'
 
   # 数据处理参数
   test_size: 0.2          # 测试集比例（用于非交叉验证模式）
@@ -23,13 +23,13 @@ data:
 # 模型相关配置
 model:
   type: "mlp"              # 模型类型: mlp, dnn, etc.
-  hidden_dims: [512, 256, 128, 64] # 隐藏层神经元数量
+  hidden_dims: [128, 96, 64, 32] # 隐藏层神经元数量
   dropout_rate: 0.0        # Dropout比例
   activation: "relu"       # 激活函数: relu, tanh, sigmoid, etc.
 
 # 训练相关配置
 training:
-  batch_size: 32           # 批次大小
+  batch_size: 64           # 批次大小
   learning_rate: 0.001     # 学习率
   weight_decay: 0.0001     # 权重衰减（L2正则化）
   num_epochs: 100          # 最大训练轮次
@@ -40,17 +40,19 @@ training:
   scheduler:
     enabled: true          # 是否使用学习率调度器
     type: "plateau"        # 调度器类型: plateau, step, cosine, etc.
-    patience: 10            # ReduceLROnPlateau的耐心值
+    patience: 5           # ReduceLROnPlateau的耐心值
     factor: 0.5            # 学习率衰减因子
     min_lr: 0.00001        # 最小学习率
 
 # 评估相关配置
 evaluation:
   metrics: ["mae", "rmse", "r2", "pearson", "spearman", "ci", "mape"]
-  visualization:
-    enabled: true
-    save_plots: true
-    show_plots: false      # 是否显示图表（通常在服务器上设为false）
+
+# 添加顶级可视化配置（这是关键修改）
+visualization:
+  enabled: true
+  save_plots: true
+  show_plots: false      # 是否显示图表（通常在服务器上设为false）
 
 # 输出相关配置
 output:

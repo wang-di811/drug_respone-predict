@@ -135,7 +135,7 @@ class Evaluator:
             logger.info(f"测试集损失: {test_loss:.4f}")
             logger.info(f"测试集 MAE: {metrics['mae']:.4f}")
             logger.info(f"测试集 RMSE: {metrics['rmse']:.4f}")
-            logger.info(f"测试集 R²: {metrics['r2']:.4f}")
+            logger.info(f"测试集 R2: {metrics['r2']:.4f}")
             logger.info(f"测试集 Pearson相关系数: {metrics['pearson']:.4f}")
             logger.info(f"测试集 Spearman等级相关系数: {metrics['spearman']:.4f}")
             logger.info(f"测试集 MAPE: {metrics['mape']:.2f}%")

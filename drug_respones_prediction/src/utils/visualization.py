@@ -1,7 +1,11 @@
+# 在visualization.py顶部添加
+import matplotlib
+matplotlib.use('Agg')  # 使用非交互式后端
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-
+import os
+import logging
 
 def plot_training_history(train_losses, val_losses, save_path='training_history.png', title='训练和验证损失'):
     """
@@ -17,7 +21,7 @@ def plot_training_history(train_losses, val_losses, save_path='training_history.
     plt.plot(train_losses, label='train_loss')
     plt.plot(val_losses, label='val_loss')
     plt.xlabel('Epoch')
-    plt.ylabel('损失')
+    plt.ylabel('loss')
     plt.title(title)
     plt.legend()
     plt.grid(True)
@@ -70,8 +74,8 @@ def plot_regression_metrics(metrics, save_path='regression_metrics.png'):
     values = list(metrics.values())
 
     plt.bar(names, values)
-    plt.ylabel('数值')
-    plt.title('回归评估指标')
+    plt.ylabel('Numerical')
+    plt.title('Regression Evaluation Metrics')
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.savefig(save_path)
@@ -103,10 +107,10 @@ def plot_fold_metrics(fold_metrics, save_path='fold_metrics.png'):
         plt.subplot(1, 3, i + 1)
         plt.bar(fold_numbers, metrics_df[metric], color=colors[i])
         plt.axhline(y=metrics_df[metric].mean(), color='r', linestyle='-',
-                    label=f'平均: {metrics_df[metric].mean():.4f}')
+                    label=f'average: {metrics_df[metric].mean():.4f}')
         plt.xlabel('flod')
         plt.ylabel(metric.upper())
-        plt.title(f'{metric.upper()} 各折对比')
+        plt.title(f'{metric.upper()} Comparison across folds')
         plt.grid(True, axis='y', alpha=0.3)
         plt.legend()
 
@@ -155,7 +159,7 @@ def plot_metrics_radar(metrics, save_path='metrics_radar.png', figsize=(10, 8)):
         fig, ax = plt.subplots(figsize=figsize, subplot_kw=dict(polar=True))
 
         # 绘制多边形
-        ax.plot(angles, values, linewidth=2, linestyle='solid', label="性能指标")
+        ax.plot(angles, values, linewidth=2, linestyle='solid', label="Performance Metrics")
         ax.fill(angles, values, alpha=0.25)
 
         # 添加每个类别的标签
@@ -168,7 +172,7 @@ def plot_metrics_radar(metrics, save_path='metrics_radar.png', figsize=(10, 8)):
         ax.set_ylim(0, 1)
 
         # 添加标题
-        plt.title('模型性能评估雷达图', size=15, y=1.1)
+        plt.title('Radar Chart for Model Performance Evaluation', size=15, y=1.1)
 
         # 保存图表
         plt.tight_layout()
@@ -179,3 +183,63 @@ def plot_metrics_radar(metrics, save_path='metrics_radar.png', figsize=(10, 8)):
         import logging
         logger = logging.getLogger('DrugResponse.Visualization')
         logger.error(f"绘制雷达图失败: {str(e)}")
+
+# 在文件末尾添加以下函数
+
+def visualize_cv_results(cv_results, save_dir, config=None, logger=None):
+    """
+    可视化交叉验证结果
+    
+    Args:
+        cv_results: 交叉验证结果字典
+        save_dir: 保存图表的目录
+        config: 配置信息
+        logger: 日志记录器
+    """
+    import os
+    import logging
+    
+    if logger is None:
+        logger = logging.getLogger('DrugResponse.Visualization')
+    
+    try:
+        logger.info("开始生成可视化结果...")
+        
+        # 1. 绘制各折指标对比图
+        fold_metrics = []
+        all_predictions = []
+        all_actuals = []
+        
+        for fold_idx, fold_data in enumerate(cv_results['fold_data']):
+            metrics = fold_data['metrics']
+            metrics['fold'] = fold_idx + 1
+            fold_metrics.append(metrics)
+            
+            # 收集所有预测值和实际值
+            all_predictions.extend(fold_data['predictions'])
+            all_actuals.extend(fold_data['actuals'])
+        
+        # 绘制各折指标对比图
+        fold_metrics_path = os.path.join(save_dir, 'fold_metrics.png')
+        plot_fold_metrics(fold_metrics, save_path=fold_metrics_path)
+        logger.info(f"保存各折指标对比图: {fold_metrics_path}")
+        
+        # 2. 绘制全局预测散点图
+        predictions_scatter_path = os.path.join(save_dir, 'predictions_scatter_global.png')
+        plot_predictions(all_predictions, all_actuals, save_path=predictions_scatter_path)
+        logger.info(f"保存全局预测散点图: {predictions_scatter_path}")
+        
+        # 3. 绘制全局指标雷达图
+        # 计算全局指标
+        global_metrics = cv_results.get('global_metrics', {})
+        if global_metrics:
+            metrics_radar_path = os.path.join(save_dir, 'metrics_radar_global.png')
+            plot_metrics_radar(global_metrics, save_path=metrics_radar_path)
+            logger.info(f"保存全局指标雷达图: {metrics_radar_path}")
+        
+        logger.info("所有可视化结果已生成完毕")
+        
+    except Exception as e:
+        logger.error(f"生成可视化结果时出错: {str(e)}")
+        import traceback
+        logger.error(traceback.format_exc())
