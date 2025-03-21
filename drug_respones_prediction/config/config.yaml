@@ -37,12 +37,13 @@ training:
   use_cuda: true           # 是否使用GPU
   logging_steps: 5         # 每多少个epoch记录一次日志
   optimizer: "adam"        # 优化器: adam, sgd, rmsprop, etc.
-  scheduler:
-    enabled: true          # 是否使用学习率调度器
-    type: "plateau"        # 调度器类型: plateau, step, cosine, etc.
-    patience: 5           # ReduceLROnPlateau的耐心值
-    factor: 0.5            # 学习率衰减因子
-    min_lr: 0.00001        # 最小学习率
+  
+scheduler:
+  enabled: true          # 是否使用学习率调度器
+  type: "plateau"        # 调度器类型: plateau, step, cosine, etc.
+  patience: 5           # ReduceLROnPlateau的耐心值
+  factor: 0.5            # 学习率衰减因子
+  min_lr: 0.00001        # 最小学习率
 
 # 评估相关配置
 evaluation:

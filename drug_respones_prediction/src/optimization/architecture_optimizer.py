@@ -1,4 +1,6 @@
 import os
+import sys
+print(sys.path)
 import yaml
 import torch
 import torch.nn as nn
@@ -10,7 +12,10 @@ from torch.utils.data import DataLoader
 from src.utils.logger import setup_logger
 from src.data.dataset import DrugResponseDataset
 from src.training.trainer import Trainer
+from src.utils.logger import setup_logger
 
+
+ # 查看Python搜索路径
 class ArchitectureOptimizer:
     """神经网络架构优化器"""
     

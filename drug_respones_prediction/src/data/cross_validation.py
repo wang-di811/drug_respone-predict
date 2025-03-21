@@ -94,7 +94,8 @@ class CrossValidator:
                     'y': y_val.values if hasattr(y_val, 'values') else y_val,
                     'shuffle': False
                 }
-            }, batch_size=self.batch_size)#['train']
+            }, batch_size=self.batch_size)
+            
             # 从返回字典中获取训练和验证数据加载器
             train_loader = data_loaders['train']
             val_loader = data_loaders['val']

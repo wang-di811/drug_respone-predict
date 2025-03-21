@@ -5,6 +5,7 @@ import torch
 import argparse
 import yaml
 import torch.nn as nn
+import traceback
 
 # 导入自定义模块
 from src.utils.logger import setup_logger
@@ -76,54 +77,58 @@ def save_predictions(cv_results, config, logger):
 
 def main(config_path):
     """主函数 - 交叉验证版本"""
-    # 加载配置
-    config = load_config(config_path)
+    try:
+        # 加载配置
+        config = load_config(config_path)
 
-    # 设置日志
-    logger = setup_logger(config)
-    logger.info("开始药物反应预测任务 - 五折交叉验证")
+        # 设置日志
+        logger = setup_logger(config)
+        logger.info("开始药物反应预测任务 - 五折交叉验证")
 
-    # 检查CUDA可用性
-    device_name = "cuda" if torch.cuda.is_available() and config['training']['use_cuda'] else "cpu"
-    device = torch.device(device_name)
-    logger.info(f"使用设备: {device}")
+        # 检查CUDA可用性
+        device_name = "cuda" if torch.cuda.is_available() and config['training']['use_cuda'] else "cpu"
+        device = torch.device(device_name)
+        logger.info(f"使用设备: {device}")
 
-    # 数据加载
-    data_loader = DataLoader(config)
-    #data_loader = DataLoader(config, num_workers=4)
-    X, y, identifiers = data_loader.load_data()
+        # 数据加载
+        data_loader = DataLoader(config)
+        #data_loader = DataLoader(config, num_workers=4)
+        X, y, identifiers = data_loader.load_data()
 
-    # 创建交叉验证器
-    cv = CrossValidator(
-        config,
-        n_splits=5,  # 五折交叉验证
-        shuffle=True,
-        stratify_by='drug_name'  # 可以根据需要选择'cell_line'或'drug_name'进行分层
-    )
+        # 创建交叉验证器
+        cv = CrossValidator(
+            config,
+            n_splits=5,  # 五折交叉验证
+            shuffle=True,
+            stratify_by='drug_name'  # 可以根据需要选择'cell_line'或'drug_name'进行分层
+        )
 
-    # 创建交叉验证数据集
-    folds = cv.create_folds(X, y, identifiers)
+        # 创建交叉验证数据集
+        folds = cv.create_folds(X, y, identifiers)
 
-    # 创建交叉验证训练器
-    cv_trainer = CVTrainer(config, device)
+        # 创建交叉验证训练器
+        cv_trainer = CVTrainer(config, device)
 
-    # 执行交叉验证训练和评估
-    cv_results = cv_trainer.train_and_evaluate(folds)
+        # 执行交叉验证训练和评估
+        cv_results = cv_trainer.train_and_evaluate(folds)
 
-    # 保存预测结果
-    predictions_file, summary_file = save_predictions(cv_results, config, logger)
+        # 保存预测结果
+        predictions_file, summary_file = save_predictions(cv_results, config, logger)
 
-    # 添加可视化代码
-    if config.get('visualization', {}).get('enabled', True):
-        # 获取保存结果的目录
-        results_dir = os.path.dirname(predictions_file)
-        # 调用可视化函数
-        from src.utils.visualization import visualize_cv_results
-        visualize_cv_results(cv_results, results_dir, config, logger)
-    
-    logger.info("药物反应预测任务完成 - 五折交叉验证")
-    
-    return cv_results, predictions_file, summary_file
+        # 添加可视化代码
+        if config.get('visualization', {}).get('enabled', True):
+            # 获取保存结果的目录
+            results_dir = os.path.dirname(predictions_file)
+            # 调用可视化函数
+            visualize_cv_results(cv_results, results_dir, config, logger)
+        
+        logger.info("药物反应预测任务完成 - 五折交叉验证")
+        
+        return cv_results, predictions_file, summary_file
+    except Exception as e:
+        print(f"程序执行出错: {str(e)}")
+        print(traceback.format_exc())
+        return None, None, None
 
 
 if __name__ == "__main__":

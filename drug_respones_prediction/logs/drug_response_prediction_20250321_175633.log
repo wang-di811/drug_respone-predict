@@ -1,0 +1,21 @@
+2025-03-21 17:56:33,232 - DrugResponse - INFO - 日志设置完成，日志文件位置: logs\drug_response_prediction_20250321_175633.log
+2025-03-21 17:56:33,232 - DrugResponse - INFO - 开始药物反应预测任务 - 五折交叉验证
+2025-03-21 17:56:34,785 - DrugResponse - INFO - 使用设备: cuda
+2025-03-21 17:56:34,785 - DrugResponse.DataLoader - INFO - 基础路径: E:\git bash file\drug_respones_prediction
+2025-03-21 17:56:34,785 - DrugResponse.DataLoader - INFO - 加载响应数据: E:\git bash file\drug_respones_prediction\src/data/filtered_ic50_data2.csv
+2025-03-21 17:56:34,785 - DrugResponse.DataLoader - INFO - 加载药物特征: E:\git bash file\drug_respones_prediction\src/data/one_hot_drugs.csv
+2025-03-21 17:56:34,785 - DrugResponse.DataLoader - INFO - 加载蛋白质特征: E:\git bash file\drug_respones_prediction\src/data/DAE_features_dim100.csv
+2025-03-21 17:56:34,837 - DrugResponse.DataLoader - INFO - 正在加载和预处理数据...
+2025-03-21 17:56:38,362 - DrugResponse.DataLoader - INFO - 数据加载完成: 特征数量 725, 样本数量 470843
+2025-03-21 17:56:38,362 - DrugResponse.CrossValidation - INFO - 创建5折交叉验证数据集
+2025-03-21 17:56:38,362 - DrugResponse.CrossValidation - INFO - 使用drug_name进行分层抽样
+2025-03-21 17:56:38,722 - DrugResponse.CrossValidation - INFO - 处理第1折
+2025-03-21 17:56:42,917 - DrugResponse.CrossValidation - INFO - 第1折数据准备完成 - 训练集: 376674样本, 验证集: 94169样本
+2025-03-21 17:56:42,917 - DrugResponse.CrossValidation - INFO - 处理第2折
+2025-03-21 17:56:48,735 - DrugResponse.CrossValidation - INFO - 第2折数据准备完成 - 训练集: 376674样本, 验证集: 94169样本
+2025-03-21 17:56:48,745 - DrugResponse.CrossValidation - INFO - 处理第3折
+2025-03-21 17:56:54,143 - DrugResponse.CrossValidation - INFO - 第3折数据准备完成 - 训练集: 376674样本, 验证集: 94169样本
+2025-03-21 17:56:54,155 - DrugResponse.CrossValidation - INFO - 处理第4折
+2025-03-21 17:57:00,650 - DrugResponse.CrossValidation - INFO - 第4折数据准备完成 - 训练集: 376675样本, 验证集: 94168样本
+2025-03-21 17:57:00,660 - DrugResponse.CrossValidation - INFO - 处理第5折
+2025-03-21 17:57:06,882 - DrugResponse.CrossValidation - INFO - 第5折数据准备完成 - 训练集: 376675样本, 验证集: 94168样本

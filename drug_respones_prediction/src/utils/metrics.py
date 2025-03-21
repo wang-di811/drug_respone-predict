@@ -7,8 +7,6 @@ from sklearn.metrics import (
     median_absolute_error,
     explained_variance_score
 )
-
-
 def calculate_all_metrics(y_true, y_pred):
     """
     计算所有评估指标

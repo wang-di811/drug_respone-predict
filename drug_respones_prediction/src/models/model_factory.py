@@ -1,4 +1,5 @@
-from src.models.neural_network import DrugResponseNN
+from .neural_network import DrugResponseNN
+#from .models.neural_network import DrugResponseNN
 import logging
 
 logger = logging.getLogger('DrugResponse.ModelFactory')
