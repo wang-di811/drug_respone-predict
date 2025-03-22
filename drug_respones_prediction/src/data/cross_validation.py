@@ -78,8 +78,8 @@ class CrossValidator:
             X_val_scaled = scaler.transform(X_val)
 
             # 创建数据加载器
-            train_dataset = DrugResponseDataset(X_train_scaled, y_train.values)
-            val_dataset = DrugResponseDataset(X_val_scaled, y_val.values)
+            #train_dataset = DrugResponseDataset(X_train_scaled, y_train.values)
+            #val_dataset = DrugResponseDataset(X_val_scaled, y_val.values)
 
             data_loaders = create_data_loaders({
                 'train': {

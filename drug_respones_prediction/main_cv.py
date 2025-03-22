@@ -12,8 +12,8 @@ from src.utils.logger import setup_logger
 from src.data.data_loader import DataLoader
 from src.data.cross_validation import CrossValidator
 from src.training.cv_trainer import CVTrainer
-from src.utils.visualization import visualize_cv_results  # 添加此行
-
+#from src.utils.visualization import visualize_cv_results  # 添加此行
+from src.utils import visualization
 def load_config(config_path):
     """加载配置文件"""
     with open(config_path, 'r', encoding='utf-8') as f:
@@ -34,6 +34,7 @@ def save_predictions(cv_results, config, logger):
     
     for fold_idx, fold_data in enumerate(cv_results['fold_data']):
         predictions = fold_data['predictions']
+        print(predictions)
         actuals = fold_data['actuals']
         fold_identifiers = fold_data['identifiers']
         
@@ -105,12 +106,14 @@ def main(config_path):
 
         # 创建交叉验证数据集
         folds = cv.create_folds(X, y, identifiers)
+        print(folds)
 
         # 创建交叉验证训练器
         cv_trainer = CVTrainer(config, device)
 
         # 执行交叉验证训练和评估
         cv_results = cv_trainer.train_and_evaluate(folds)
+        print(cv_results)
 
         # 保存预测结果
         predictions_file, summary_file = save_predictions(cv_results, config, logger)
@@ -120,7 +123,7 @@ def main(config_path):
             # 获取保存结果的目录
             results_dir = os.path.dirname(predictions_file)
             # 调用可视化函数
-            visualize_cv_results(cv_results, results_dir, config, logger)
+            visualization.visualize_cv_results(cv_results, results_dir, config, logger)
         
         logger.info("药物反应预测任务完成 - 五折交叉验证")
         

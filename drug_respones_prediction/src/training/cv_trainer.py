@@ -11,6 +11,7 @@ from src.training.trainer import Trainer
 from src.training.evaluator import Evaluator
 from src.utils.visualization import plot_training_history, plot_fold_metrics
 from src.utils.metrics import calculate_all_metrics
+from src.utils.visualization import visualize_cv_results
 
 logger = logging.getLogger('DrugResponse.CVTrainer')
 
@@ -79,9 +80,10 @@ class CVTrainer:
             # 绘制该折的训练历史
             fold_history_path = os.path.join(self.results_dir, f"fold_{fold_idx + 1}_history.png")
             plot_training_history(
-                train_losses, val_losses,
+                train_losses,
+                val_losses,
                 save_path=fold_history_path,
-                title=f"第{fold_idx + 1}折训练和验证损失"
+                title=f"NO{fold_idx + 1}. flod tain and validation loss"
             )
 
             # 评估模型
@@ -197,5 +199,6 @@ class CVTrainer:
         with open(pickle_path, 'wb') as f:
             pickle.dump(updated_cv_results, f)
         logger.info(f"已保存完整结果到: {pickle_path}")
+        visualize_cv_results(updated_cv_results, self.results_dir, self.config, logger)
 
         return updated_cv_results

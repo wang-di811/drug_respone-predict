@@ -10,7 +10,8 @@ import traceback
 import sys
 from datetime import datetime
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-from .metrics import calculate_all_metrics, concordance_index
+from .metrics import calculate_all_metrics, concordance_index, explained_variance_score
+import numpy as np
 
 # 获取日志记录器
 logger = logging.getLogger('DrugResponse.Visualization')
@@ -320,11 +321,7 @@ def visualize_cv_results(cv_results, save_dir, config=None, logger=None):
         save_dir: 保存图表的目录
         config: 配置信息
         logger: 日志记录器
-    """
-    import os
-    import logging
-    import numpy as np
-    
+    """    
     if logger is None:
         logger = logging.getLogger('DrugResponse.Visualization')
     
