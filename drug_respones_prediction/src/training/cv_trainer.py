@@ -64,14 +64,21 @@ class CVTrainer:
 
             # 创建该折的模型实例
             input_dim = fold_input['train']['X'].shape[1]
+            logger.info(f"这是输入维度:{input_dim}")
+            #print("这是输入维度",input_dim)
             model = create_model(self.config, input_dim)
+            logger.info(f"这是模型:{model}")
+            #print("这是模型",model)
 
             # 训练模型
             fold_trainer = Trainer(model, self.config, self.device)
+            logger.info(f"这是训练器:{fold_trainer}")
             best_model, train_losses, val_losses = fold_trainer.train(
                 fold_input['train']['loader'],
                 fold_input['val']['loader']
             )
+            logger.info(f"这是最佳模型:{best_model}")
+            #print("这是最佳模型",best_model)
 
             # 保存训练历史
             all_train_losses.append(train_losses)
@@ -85,10 +92,16 @@ class CVTrainer:
                 save_path=fold_history_path,
                 title=f"NO{fold_idx + 1}. flod tain and validation loss"
             )
+            logger.info("训练历史记录绘制完成")
+            print("训练历史记录绘制完成")
 
             # 评估模型
             evaluator = Evaluator(best_model, self.criterion, self.device, self.config)
-            fold_metrics = evaluator.evaluate(fold_input['val']['loader'])
+            #fold_metrics = evaluator.evaluate(fold_input['val']['loader'])
+            # 传递验证集的identifiers
+            fold_metrics = evaluator.evaluate(fold_input['val']['loader'], fold_input['val']['id'])
+            #print("正在评估模型")
+            print("正在评估模型")
 
             # 收集该折的评估指标
             fold_metrics['fold'] = fold_idx + 1
@@ -96,6 +109,8 @@ class CVTrainer:
 
             # 收集预测结果
             fold_predictions = np.array(fold_metrics['predictions'])
+            logger.info(f"这是预测结果_cv_trainer:{fold_predictions}")
+            print("这是预测结果_cv_trainer",fold_predictions)
             fold_actuals = np.array(fold_metrics['actuals'])
 
             # 准备标识符信息

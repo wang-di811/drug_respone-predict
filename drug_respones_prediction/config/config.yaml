@@ -32,7 +32,7 @@ training:
   batch_size: 64           # 批次大小
   learning_rate: 0.001     # 学习率
   weight_decay: 0.0001     # 权重衰减（L2正则化）
-  num_epochs: 100          # 最大训练轮次
+  num_epochs: 5          # 最大训练轮次
   early_stopping_patience: 10  # 早停的耐心值
   use_cuda: true           # 是否使用GPU
   logging_steps: 5         # 每多少个epoch记录一次日志

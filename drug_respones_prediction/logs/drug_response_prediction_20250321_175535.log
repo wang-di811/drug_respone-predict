@@ -1,2 +1,0 @@
-2025-03-21 17:55:35,970 - DrugResponse - INFO - 日志设置完成，日志文件位置: logs\drug_response_prediction_20250321_175535.log
-2025-03-21 17:55:35,970 - DrugResponse - INFO - 开始药物反应预测任务 - 五折交叉验证

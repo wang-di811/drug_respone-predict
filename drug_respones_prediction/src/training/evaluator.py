@@ -187,6 +187,9 @@ class Evaluator:
                 except Exception as e:
                     logger.error(f"保存预测结果时出错: {str(e)}")
                     logger.error(traceback.format_exc())
+            else:
+                logger.info("identifiers is None")
+                #print("identifiers is None")    
 
             return metrics
             

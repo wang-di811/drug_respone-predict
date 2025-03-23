@@ -6,13 +6,12 @@ import argparse
 import yaml
 import torch.nn as nn
 import traceback
-
 # 导入自定义模块
 from src.utils.logger import setup_logger
 from src.data.data_loader import DataLoader
 from src.data.cross_validation import CrossValidator
 from src.training.cv_trainer import CVTrainer
-#from src.utils.visualization import visualize_cv_results  # 添加此行
+from src.utils.visualization import visualize_cv_results  # 添加此行
 from src.utils import visualization
 def load_config(config_path):
     """加载配置文件"""
@@ -24,6 +23,7 @@ def save_predictions(cv_results, config, logger):
     """保存药物响应预测结果"""
     # 创建保存结果的目录
     results_dir = config['output']['results_dir']
+    print("这是保存结果的目录",results_dir)
     os.makedirs(results_dir, exist_ok=True)
     
     # 获取当前时间戳
@@ -106,17 +106,20 @@ def main(config_path):
 
         # 创建交叉验证数据集
         folds = cv.create_folds(X, y, identifiers)
-        print(folds)
+        logger.info(f"这是交叉验证数据集:{folds}")
+        #print("这是交叉验证数据集",folds)
 
         # 创建交叉验证训练器
         cv_trainer = CVTrainer(config, device)
+        logger.info("正在创建交叉验证数据集")
 
         # 执行交叉验证训练和评估
         cv_results = cv_trainer.train_and_evaluate(folds)
-        print(cv_results)
+        logger.info(f"这是交叉验证训练和评估:{cv_results}")
 
         # 保存预测结果
         predictions_file, summary_file = save_predictions(cv_results, config, logger)
+        logger.info(f"这是预测结果main_cv:{predictions_file, summary_file}")
 
         # 添加可视化代码
         if config.get('visualization', {}).get('enabled', True):
@@ -132,6 +135,7 @@ def main(config_path):
         print(f"程序执行出错: {str(e)}")
         print(traceback.format_exc())
         return None, None, None
+
 
 
 if __name__ == "__main__":

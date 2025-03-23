@@ -100,14 +100,6 @@ class CrossValidator:
             train_loader = data_loaders['train']
             val_loader = data_loaders['val']
 
-            '''val_loader = create_data_loaders({
-                'val': {
-                    'dataset': val_dataset,
-                    'batch_size': self.batch_size,
-                    'shuffle': False
-                }
-            })['val']'''
-
             fold_data = {
                 'train': {
                     'X': X_train,
